@@ -134,12 +134,12 @@ def login():
 
     session['adfs-user'] = username
     session['adfs-email'] = email
-    session.save()
+    #session.save()
 
     # Log the user in programatically.
     # Reference: ckan/views/user.py
     # By this point we either have a user or created one and they're good to login.
-    resp = toolkit.h.redirect_to('user.logged_in')
+    resp = toolkit.h.redirect_to('home.index')
 
     '''Set the repoze.who cookie to match a given user_id'''
     if 'repoze.who.plugins' in request.environ:
@@ -294,7 +294,7 @@ class ADFSPlugin(plugins.SingletonPlugin):
         if keys_to_delete:
             for key in keys_to_delete:
                 del session[key]
-            session.save()
+            #session.save()
 
     def abort(self, status_code, detail, headers, comment):
         """
