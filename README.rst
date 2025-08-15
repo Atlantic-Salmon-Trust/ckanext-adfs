@@ -56,7 +56,7 @@ do::
 
     git clone https://github.com/boykoc/ckanext-adfs.git
     cd ckanext-adfs
-    python setup.py develop
+    pip install -e .
     pip install -r requirements.txt
 
 Add ``adfs`` to the ``ckan.plugins`` setting in your CKAN config file (by default the config file is located at
@@ -93,23 +93,3 @@ quite often so you may need to poke around to find the correct settings. It has
 been our experience that their otherwise excellent documentation doesn't
 always stay up-to-date and/or Google doesn't point to the most current version
 of the documentation. YMMV.
-
-
-------------
-Development Environment:
-------------
-
-Create a new virtualenv and install the requirements with the `pip` command::
-
-    $ mkvirtualenv foo
-    (foo)$ pip install -r requirements.txt
-
-Alternatively, make sure you've installed the requirements in CKAN's own
-virtualenv.
-
-To run the test suite type::
-
-    $ python -m unittest discover
-
-All the heavy lifting for checking the response is done in the `validation`
-module.

@@ -2,3 +2,4 @@
 *.swp
 *~
 ckanext_adfs.egg-info/*
+.Rproj.user
