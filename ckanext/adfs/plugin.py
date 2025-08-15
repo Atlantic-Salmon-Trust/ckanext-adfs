@@ -150,80 +150,6 @@ def login():
 
     return resp
 
-
-def request_reset():
-    context = {'model': model, 'session': model.Session, 'user': toolkit.c.user,
-                'auth_user_obj': toolkit.c.userobj}
-    data_dict = {'id': request.params.get('user')}
-    try:
-        toolkit.check_access('request_reset', context)
-    except toolkit.NotAuthorized:
-        toolkit.abort(403, toolkit._('Unauthorized to request reset password.'))
-
-    if request.method == 'POST':
-        id = request.params.get('user') or request.form.get('user')
-        if id in (None, u''):
-            toolkit.h.flash_error(toolkit._(u'Email is required'))
-            return toolkit.h.redirect_to(u'/user/reset')
-        context = {'model': model,
-                    'user': toolkit.c.user,
-                    u'ignore_auth': True}
-        user_objs = []
-
-        if u'@' not in id:
-            try:
-                user_dict = toolkit.get_action('user_show')(context, {'id': id})
-                user_objs.append(context['user_obj'])
-            except toolkit.ObjectNotFound:
-                pass
-        else:
-            user_list = logic.get_action(u'user_list')(context, {
-                u'email': id
-            })
-            if user_list:
-                # send reset emails for *all* user accounts with this email
-                # (otherwise we'd have to silently fail - we can't tell the
-                # user, as that would reveal the existence of accounts with
-                # this email address)
-                for user_dict in user_list:
-                    logic.get_action(u'user_show')(
-                        context, {u'id': user_dict[u'id']})
-                    user_objs.append(context[u'user_obj'])
-
-        if not user_objs:
-            log.info(u'User requested reset link for unknown user: {}'
-                        .format(id))
-
-        for user_obj in user_objs:
-            # Don't reset password for ADFS users
-            if user_obj.password is None or '@' in user_obj.name:
-                # always tell the user it succeeded, because otherwise we reveal
-                # which accounts are using ADFS
-                toolkit.h.flash_success(
-                    toolkit._(u'A reset link has been emailed to you '
-                        '(unless the account specified does not exist)'))
-                return toolkit.h.redirect_to(u'/')
-
-            log.info(u'Emailing reset link to user: {}'
-                        .format(user_obj.name))
-            try:
-                mailer.send_reset_link(user_obj)
-            except mailer.MailerException as e:
-                toolkit.h.flash_error(
-                    toolkit._(u'Error sending the email. Try again later '
-                        'or contact an administrator for help')
-                )
-                log.exception(e)
-                return toolkit.h.redirect_to(u'/')
-        # always tell the user it succeeded, because otherwise we reveal
-        # which accounts exist or not
-        toolkit.h.flash_success(
-            toolkit._(u'A reset link has been emailed to you '
-                '(unless the account specified does not exist)'))
-        return toolkit.h.redirect_to(u'/')
-    return toolkit.render('user/request_reset.html')
-
-
 class ADFSPlugin(plugins.SingletonPlugin):
     """
     Log us in via the ADFSes
@@ -252,8 +178,7 @@ class ADFSPlugin(plugins.SingletonPlugin):
     def get_blueprint(self):
         blueprint = Blueprint('adfs_redirect_uri', self.__module__)
         rules = [
-            ('/adfs/signin/', 'login', login),
-            ('/user/reset', 'request_reset', request_reset)
+            ('/adfs/signin/', 'login', login)
         ]
         for rule in rules:
             blueprint.add_url_rule(*rule, methods=['POST'])
