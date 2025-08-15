@@ -8,47 +8,8 @@
  <section class="module">
     <div class="module-content">
       <h1 class="page-heading">Atlantic Salmon Trust Sign In</h1>
-      <p>For AST staff connected with an enterprise account only.</p>
+      <p>For AST staff connecting with MS365 account</p>
       <a class="btn btn-primary" href="{{ h.adfs_authentication_endpoint() }}">AST Login</a>
     </div>
-    <hr>
-    <!-- commenting out some html as not sure I'll use it in the AST interface
-    
-    <div class="module-content external-login">
-      <h2 class="page-heading">External Login</h2>
-      {% block form %}
-        {{ super() }}
-      {% endblock %}
-    </div>
-    
-    -->
   </section>
 {% endblock %}
-
-<!-- commenting out some html as not sure I'll use it in the AST interface
-
-{% block secondary_content %}
-  {% if h.check_access('user_create') %}
-  {% block help_register %}
-    {{ super() }}
-  {% endblock %}
-  {% endif %}
-
-  {% block help_forgotten %}
-  <section class="module module-narrow module-shallow">
-    {% block help_forgotten_inner %}
-    <h2 class="module-heading">{{ _('Forgotten your password?') }}</h2>
-    <div class="module-content">
-      <p>{% trans %}For external user accounts only.{% endtrans %}</p>
-      <p class="action">
-        {% block help_forgotten_button %}
-        <a class="btn btn-default" href="{{ h.url_for('user.request_reset') }}">{{ _('Forgot your password?') }}</a>
-        {% endblock %}
-      </p>
-    </div>
-    {% endblock %}
-  </section>
-  {% endblock %}
-{% endblock %}
-
--->
