@@ -10,7 +10,6 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
-session = toolkit.session
 
 from ckanext.adfs.validation import validate_saml
 from ckanext.adfs.metadata import get_certificates, get_federation_metadata, get_wsfed
@@ -18,7 +17,7 @@ from ckanext.adfs.extract import get_user_info
 from ckanext.adfs import schema as adfs_schema
 from ckan.logic import schema as core_schema
 from ckan.common import request
-from flask import Blueprint
+from flask import Blueprint, session
 from flask_login import login_user
 
 log = logging.getLogger(__name__)
@@ -136,10 +135,9 @@ def login():
 
     session['adfs-user'] = username
     session['adfs-email'] = email
-    #session.save()
 
     # Log the user in programatically.
-    #login_user(user)
+    login_user(user)
     # Reference: ckan/views/user.py
     # By this point we either have a user or created one and they're good to login.
     resp = toolkit.h.redirect_to('home.index')
@@ -297,7 +295,6 @@ class ADFSPlugin(plugins.SingletonPlugin):
         if keys_to_delete:
             for key in keys_to_delete:
                 del session[key]
-            #session.save()
 
     def abort(self, status_code, detail, headers, comment):
         """
