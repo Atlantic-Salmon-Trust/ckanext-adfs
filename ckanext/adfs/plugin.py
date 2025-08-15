@@ -105,7 +105,7 @@ def login():
 
     user = model.User.by_name(username)
     if user:
-        if not user.is_active():
+        if not user.is_active:
             # Deleted user
             log.error('Unable to login with ADFS, {} was deleted'.format(username))
             toolkit.h.flash_error('This CKAN account was deleted and is no longer accessible.')
