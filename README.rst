@@ -2,10 +2,7 @@
 ckanext-adfs
 ============
 
-**As of 2018-12-11 this extension has been tested against CKAN 2.8.1. However
-YMMV.**
-**The changes made to make it compatible for 2.8.1 are breaking changes for
-earlier versions.**
+**Some small changes made (up to SHA 786b82d6...) to get this now Working with CKAN 2.11**
 
 A CKAN extension for validating users against Microsoft's Active Directory
 Federated Services (ADFS) Single Sign On (SSO) API.
@@ -44,7 +41,7 @@ work (lxml and M2Crypto).
 
 You'll also need the following packages installed::
 
-    sudo apt-get install libxml2 libxml2-dev libxslt1.1 libxslt1-dev openssl libssl-dev swig python-dev
+    sudo apt-get install libxml2 libxml2-dev libxslt1.1 libxslt1-dev openssl libssl-dev swig python-dev-is-python3
 
 
 ------------
@@ -54,7 +51,7 @@ Installation
 To install ckanext-adfs for development (or prod), activate your CKAN virtualenv and
 do::
 
-    git clone https://github.com/boykoc/ckanext-adfs.git
+    git clone https://github.com/Atlantic-Salmon-Trust/ckanext-adfs
     cd ckanext-adfs
     pip install -e .
     pip install -r requirements.txt
@@ -63,30 +60,32 @@ Add ``adfs`` to the ``ckan.plugins`` setting in your CKAN config file (by defaul
 ``/etc/ckan/default/production.ini``).
 
 ------------
-Configururation
+Configuration
 ------------
 
-In Azure ensure the following settings are correct for your application:
+**Azure Guide valid August 2025**
 
-* Sign-on URL - should be https://yourdomain.com/user/login (replacing <yourdomain> with, er, your domain).
-* Reply URL - should be https://yourdomain.com/adfs/signin/ (make sure you include the trailing slash).
-
-On the machine hosting your instance of CKAN:
-
-Ensure all the requirements are installed (see `requirements.txt` for further
-details).
+CREATE AN "ENTERPRISE APPLICATION" IN AZURE PORTAL
 
 In your CKAN's production.ini / development.ini file you need to provide two settings in the
 `[app:main]` section:
 
 * adfs_wtrealm - the `APP ID URI` setting found in the "Get Started" / "Enable Users to Sign On" section on the "home" page for the application integrating with ADFS on the Azure website. This is usually the same as the APP ID URI you define in the settings for the application.
-* adfs_metadata_url - a URL pointing to a remote file called `FederationMetadata.xml` containing the ADFS_NAMESPACE and adfs_x509 related values. This URL is in the "Federation Metadata Document URL" value in the "Enable Users to Sign On" section of the Azure website (at current time of writing).
+* adfs_metadata_url - a URL pointing to a remote file called `FederationMetadata.xml` containing the ADFS_NAMESPACE and adfs_x509 related values. This URL is at https://login.microsoftonline.com/<YOUR_AZURE_NAMESPACE>/FederationMetadata/2007-06/FederationMetadata.xml.
+
+The following are optional and can be left as default:
+
 * adfs_create_user = Optional Boolean, defaults to False. False requires a sysadmin to create the user via api or paster command first matching their email and user name to their organization email and username.
 * adfs_organization_name = Name of Organization/Company (defaults to our organization)
-
 * adfs_contact_email = Optional String (e.g. opendata@organization.com), defaults to 'your administrator'
-
 * adfs_url_template - a template snippet for the URL that points to the ADFS authentication endpoint (e.g. {}idpinitiatedsignon.aspx?loginToRp={}). This template uses the wsfed endpoint extracted from FederationMetadata.xml and adfs_wtrealm.
+
+SET UP SINGLE SIGN ON
+ensure the following settings are correct for your application:
+
+* Sign-on URL - should be https://yourdomain.com/user/login (replacing <yourdomain> with, er, your domain).
+* Reply URL - should be https://yourdomain.com/adfs/signin/ (make sure you include the trailing slash).
+
 
 *A WORD OF WARNING* Microsoft appears to change its UI in the Azure website
 quite often so you may need to poke around to find the correct settings. It has
