@@ -11,35 +11,16 @@
       <p>For AST staff connecting with MS365 account</p>
       <a class="btn btn-primary" href="{{ h.adfs_authentication_endpoint() }}">AST Login</a>
     </div>
-    <hr>
-    <div class="module-content external-login">
-      <h2 class="page-heading">External Login</h2>
-      {% block form %}
-        {{ super() }}
-      {% endblock %}
-    </div>
-
   </section>
 {% endblock %}
 
 {% block secondary_content %}
-  {% if h.check_access('user_create') %}
-  {% block help_register %}
-    {{ super() }}
-  {% endblock %}
-  {% endif %}
-
-  {% block help_forgotten %}
+  {% block login_logo %}
   <section class="module module-narrow module-shallow">
-    {% block help_forgotten_inner %}
-    <h2 class="module-heading">{{ _('Forgotten your password? Testing 2') }}</h2>
+    {% block login_logo_inner %}
+    <h2 class="module-heading">{{ _('Atlantic Salmon Trust Data Portal') }}</h2>
     <div class="module-content">
-      <p>{% trans %}For external user accounts only.{% endtrans %}</p>
-      <p class="action">
-        {% block help_forgotten_button %}
-        <a class="btn btn-default" href="{{ h.url_for('user.request_reset') }}">{{ _('Forgot your password?') }}</a>
-        {% endblock %}
-      </p>
+      <img src="https://data.atlanticsalmontrust.org/uploads/admin/AST-Logo-colour-transparent.png" width="200" alt="the-atlantic-salmon-trust">
     </div>
     {% endblock %}
   </section>
