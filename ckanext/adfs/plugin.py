@@ -194,7 +194,7 @@ class ADFSPlugin(plugins.SingletonPlugin):
         if 'repoze.who.identity' in environ:
             user = environ['repoze.who.identity']['repoze.who.userid']
             # In CKAN 2.9.6 '{user_id},1' is stored in session cookie instead of username
-            if toolkit.check_ckan_version(min_version='2.9.6', max_version='2.9.99') and user.endswith(',1'):
+            if toolkit.check_ckan_version(min_version='2.9.6', max_version='2.11.3') and user.endswith(',1'):
                 user_id = user[:-2]
                 user_obj = model.User.get(user_id)
                 if user_obj:
